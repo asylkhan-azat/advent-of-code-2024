@@ -1,4 +1,6 @@
-﻿namespace AdventOfCode2024;
+﻿using System.Runtime.InteropServices;
+
+namespace AdventOfCode2024;
 
 public sealed class Problem1 : IProblem
 {
@@ -11,11 +13,52 @@ public sealed class Problem1 : IProblem
         _writer = writer;
     }
 
-    public void Solve()
+    public void Solve(int partNumber)
+    {
+        switch (partNumber)
+        {
+            case 1:
+                SolvePart1();
+                break;
+
+            case 2:
+                SolvePart2();
+                break;
+        }
+    }
+
+    private void SolvePart2()
+    {
+        var lhs = new List<int>();
+        var rhs = new Dictionary<int, int>();
+
+        foreach (var pair in InputPair.FromFile(_path))
+        {
+            lhs.Add(pair.Lhs);
+
+            ref var rhsEntry = ref CollectionsMarshal.GetValueRefOrAddDefault(
+                rhs,
+                pair.Rhs,
+                out _);
+
+            rhsEntry++;
+        }
+
+        var similarityScore = 0;
+
+        foreach (var number in lhs)
+        {
+            similarityScore += number * rhs.GetValueOrDefault(number, 0);
+        }
+        
+        _writer.WriteLine(similarityScore);
+    }
+
+    private void SolvePart1()
     {
         var lhs = new PriorityQueue<int, int>();
         var rhs = new PriorityQueue<int, int>();
-        
+
         foreach (var pair in InputPair.FromFile(_path))
         {
             lhs.Enqueue(pair.Lhs, pair.Lhs);
@@ -31,7 +74,7 @@ public sealed class Problem1 : IProblem
 
         _writer.WriteLine(distance);
     }
-    
+
     internal readonly record struct InputPair(int Lhs, int Rhs)
     {
         public static IEnumerable<InputPair> FromFile(string path)

@@ -11,7 +11,17 @@ public sealed class Problem2 : IProblem
         _writer = writer;
     }
 
-    public void Solve()
+    public void Solve(int partNumber)
+    {
+        switch (partNumber)
+        {
+            case 1:
+                SolvePartOne();
+                break;
+        }
+    }
+
+    private void SolvePartOne()
     {
         var count = 0;
 
@@ -22,7 +32,7 @@ public sealed class Problem2 : IProblem
                 count++;
             }
         }
-        
+
         _writer.WriteLine(count);
     }
 
@@ -39,20 +49,20 @@ public sealed class Problem2 : IProblem
                 {
                     var level = Levels[i];
                     var sign = Math.Sign(level - previousLevel);
-                    
+
                     previousSign ??= sign;
                     if (previousSign != sign)
                     {
                         return false;
                     }
-                    
+
                     var diff = Math.Abs(level - previousLevel);
 
                     if (diff is < 1 or > 3)
                     {
                         return false;
                     }
-                    
+
                     previousSign = sign;
                     previousLevel = level;
                 }
@@ -60,7 +70,7 @@ public sealed class Problem2 : IProblem
                 return true;
             }
         }
-        
+
         public static IEnumerable<Report> FromFile(string path)
         {
             using var fs = File.OpenRead(path);

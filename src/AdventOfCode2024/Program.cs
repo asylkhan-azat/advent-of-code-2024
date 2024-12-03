@@ -6,9 +6,11 @@ var problemFactory = new Dictionary<int, Func<int, IProblem>>
     [2] = static problemId => new Problem2(GetProblemInputFile(problemId), Console.Out),
 };
 
-var problemId = ReadProblemId();
+var problemId = ReadInt("Enter problem ID: ", "Please, enter valid problemID: ");
 var problem = problemFactory[problemId].Invoke(problemId);
-problem.Solve();
+
+var partNumber = ReadInt("Enter part number: ", "Please, enter valid part number: ");
+problem.Solve(partNumber);
 return 0;
 
 static string GetProblemInputFile(int problemId)
@@ -23,15 +25,17 @@ static string GetProblemInputFile(int problemId)
     return Path.Combine(folder, $"input_{problemId}.txt");
 }
 
-static int ReadProblemId()
+static int ReadInt(string onFirstInputText, string? onErrorText = null)
 {
-    Console.Write("Enter problem ID: ");
+    onErrorText ??= onFirstInputText;
+    
+    Console.Write(onFirstInputText);
     int problemId;
     
     while (!int.TryParse(Console.ReadLine(), out problemId))
     {
         Console.Clear();
-        Console.Write("Enter valid problem ID: ");
+        Console.Write(onErrorText);
     }
 
     return problemId;

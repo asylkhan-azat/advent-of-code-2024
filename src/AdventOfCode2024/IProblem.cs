@@ -2,5 +2,5 @@
 
 public interface IProblem
 {
-    void Solve();
+    void Solve(int partNumber);
 }

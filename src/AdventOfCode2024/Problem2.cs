@@ -18,9 +18,28 @@ public sealed class Problem2 : IProblem
             case 1:
                 SolvePartOne();
                 break;
+            
+            case 2:
+                SolvePartTwo();
+                break;
         }
     }
 
+    private void SolvePartTwo()
+    {
+        var count = 0;
+
+        foreach (var report in Report.FromFile(_path))
+        {
+            if (report.IsSafeUsingDampener)
+            {
+                count++;
+            }
+        }
+
+        _writer.WriteLine(count);
+    }
+    
     private void SolvePartOne()
     {
         var count = 0;
@@ -38,37 +57,57 @@ public sealed class Problem2 : IProblem
 
     private readonly record struct Report(int[] Levels)
     {
-        public bool IsSafe
+        public bool IsSafeUsingDampener
         {
             get
             {
-                var previousLevel = Levels[0];
-                var previousSign = new int?();
+                if (IsSafe) return true;
 
-                for (var i = 1; i < Levels.Length; i++)
+                for (var i = 0; i < Levels.Length; i++)
                 {
-                    var level = Levels[i];
-                    var sign = Math.Sign(level - previousLevel);
+                    var reportWithoutLevel = Levels.ToList();
+                    reportWithoutLevel.RemoveAt(i);
 
-                    previousSign ??= sign;
-                    if (previousSign != sign)
+                    if (CheckIfSafe(reportWithoutLevel))
                     {
-                        return false;
+                        return true;
                     }
+                }
+                
+                return false;
+            }
+        }
+        
+        public bool IsSafe => CheckIfSafe(Levels);
 
-                    var diff = Math.Abs(level - previousLevel);
+        private static bool CheckIfSafe(IReadOnlyList<int> levels)
+        {
+            var previousLevel = levels[0];
+            var previousSign = new int?();
 
-                    if (diff is < 1 or > 3)
-                    {
-                        return false;
-                    }
+            for (var i = 1; i < levels.Count; i++)
+            {
+                var level = levels[i];
+                var sign = Math.Sign(level - previousLevel);
 
-                    previousSign = sign;
-                    previousLevel = level;
+                previousSign ??= sign;
+                if (previousSign != sign)
+                {
+                    return false;
                 }
 
-                return true;
+                var diff = Math.Abs(level - previousLevel);
+
+                if (diff is < 1 or > 3)
+                {
+                    return false;
+                }
+
+                previousSign = sign;
+                previousLevel = level;
             }
+
+            return true;
         }
 
         public static IEnumerable<Report> FromFile(string path)

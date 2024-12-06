@@ -6,7 +6,8 @@ var problemFactory = new Dictionary<int, Func<int, IProblem>>
     [2] = static problemId => new Problem2(GetProblemInputFile(problemId), Console.Out),
     [3] = static problemId => new Problem3(GetProblemInputFile(problemId), Console.Out),
     [4] = static problemId => new Problem4(GetProblemInputFile(problemId), Console.Out),
-    [5] = static problemId => new Problem5(GetProblemInputFile(problemId), Console.Out)
+    [5] = static problemId => new Problem5(GetProblemInputFile(problemId), Console.Out),
+    [6] = static problemId => new Problem6(GetProblemInputFile(problemId), Console.Out),
 };
 
 var problemId = ReadInt("Enter problem ID: ", "Please, enter valid problemID: ");

@@ -1,21 +1,30 @@
-﻿using AdventOfCode2024;
+﻿using System.Diagnostics;
+using AdventOfCode2024;
 
-var problemFactory = new Dictionary<int, Func<int, IProblem>>
-{
-    [1] = static problemId => new Problem1(GetProblemInputFile(problemId), Console.Out),
-    [2] = static problemId => new Problem2(GetProblemInputFile(problemId), Console.Out),
-    [3] = static problemId => new Problem3(GetProblemInputFile(problemId), Console.Out),
-    [4] = static problemId => new Problem4(GetProblemInputFile(problemId), Console.Out),
-    [5] = static problemId => new Problem5(GetProblemInputFile(problemId), Console.Out),
-    [6] = static problemId => new Problem6(GetProblemInputFile(problemId), Console.Out),
-};
 
 var problemId = ReadInt("Enter problem ID: ", "Please, enter valid problemID: ");
-var problem = problemFactory[problemId].Invoke(problemId);
+var problem = GetProblem(problemId);
 
 var partNumber = ReadInt("Enter part number: ", "Please, enter valid part number: ");
 problem.Solve(partNumber);
 return 0;
+
+static IProblem GetProblem(int problemId)
+{
+    var type = Type.GetType($"AdventOfCode2024.Problem{problemId}");
+
+    if (type is null) throw new InvalidOperationException("Problem not found");
+
+    var constructor = type.GetConstructor([typeof(string), typeof(TextWriter)]);
+
+    if (constructor is null) throw new InvalidOperationException("Problem does not contain constructor");
+
+    var problem = constructor.Invoke([GetProblemInputFile(problemId), Console.Out]) as IProblem;
+    
+    Debug.Assert(problem is not null);
+
+    return problem;
+}
 
 static string GetProblemInputFile(int problemId)
 {

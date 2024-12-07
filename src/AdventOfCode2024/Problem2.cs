@@ -1,5 +1,8 @@
-﻿namespace AdventOfCode2024;
+﻿using System.Diagnostics.CodeAnalysis;
 
+namespace AdventOfCode2024;
+
+[SuppressMessage("ReSharper", "UnusedType.Global")]
 public sealed class Problem2 : IProblem
 {
     private readonly string _path;

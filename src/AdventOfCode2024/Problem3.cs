@@ -1,7 +1,9 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Text.RegularExpressions;
 
 namespace AdventOfCode2024;
 
+[SuppressMessage("ReSharper", "UnusedType.Global")]
 public sealed partial class Problem3 : IProblem
 {
     private readonly string _path;
